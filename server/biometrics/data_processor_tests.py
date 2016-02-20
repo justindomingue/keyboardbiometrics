@@ -12,8 +12,8 @@ class DataProcessorTests(unittest.TestCase):
         self.dp = DataProcessor(dict)
 
     def testNgrams(self):
-        self.assertListEqual([ [1,2], [2,3], [3,4] ], self.dp.ngrams([1,2,3], 2))
-        self.assertListEqual([ [1,2,3], [2,3,4], [3,4,5] ], self.dp.ngrams([1,2,3,4,5], 2))
+        self.assertListEqual([ (1,2), (2,3), (3,4) ], self.dp.ngrams([1,2,3,4], 2))
+        self.assertListEqual([ (1,2,3), (2,3,4), (3,4,5) ], self.dp.ngrams([1,2,3,4,5], 3))
 
     # def testProcess(self):
 
