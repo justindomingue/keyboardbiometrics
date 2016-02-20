@@ -1,5 +1,5 @@
 class Digraph:
-    def __init__(self, digraph, n, mean, variance, skewness, kurtosis):
+    def __init__(self, digraph, n, mean, variance, skewness=0, kurtosis=0):
         self.digraph = digraph
         self.n = n
         self.mean = mean
