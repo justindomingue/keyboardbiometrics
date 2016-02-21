@@ -1,0 +1,15 @@
+extends layout
+
+block content
+	h1= title
+	form(method: 'post')
+		div
+			div
+				h5 Type the following text:
+				p(id="toType") I am the very pattern of a modern Major-General I've information vegetable, animal, and mineral I know the Kings of England, and I quote the fights historical, From Marathon to Waterloo, in order categorical I'm very well acquainted too with matters mathematical.
+
+				textarea(name='body', rows=5, cols=95, id='textBody')
+				div(class='progress', active)
+					div(class='progress-bar', role='progress-bar', aria-valuemin="0", aria-valuemax="100")
+				div
+					button(id="submit") Submit
