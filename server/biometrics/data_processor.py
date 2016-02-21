@@ -59,6 +59,7 @@ if __name__ == "__main__":
     with open('data/data.json','r') as f:
         data = json.load(f)
 
+        frames = []
         for k,v in data.items():
             print ("=======")
             print (k)
@@ -70,3 +71,5 @@ if __name__ == "__main__":
            # print (dp.digraphs)
            # print (dp.df)
             print(dp.df.index)
+
+            frames.append(dp.df)
