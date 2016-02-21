@@ -17,7 +17,6 @@ class DataProcessorTests(unittest.TestCase):
 
         self.dp.preprocess()
         f = self.dp.process()
-        print f
 
 
 if __name__ == '__main__':

@@ -48,6 +48,9 @@ class DataProcessor:
 
         self.df = pd.concat([count, means, var], axis=1)
 
+        # Filter
+        self.df = self.df[self.df[0] >= 4]
+
     def filter(self, data, action):
         return [x for x in data if x[1] == action]
 
@@ -56,18 +59,25 @@ class DataProcessor:
 
 
 if __name__ == "__main__":
-    with open('data/data.json','r') as f:
+    with open('data/data2.json','r') as f:
         data = json.load(f)
 
-        frames = []
+        all_means = pd.DataFrame()
         for k,v in data.items():
             dp = DataProcessor(v)
             dp.preprocess()
             dp.process()
 
-            print(dp.df)
+            all_means = pd.concat([all_means, dp.df[1]], axis=1)
 
-            frames.append(dp.df)
+        all_means_wo_na = all_means.dropna()
 
-    print(euclidean(frames[0][1][0:200], frames[1][1][0:200]))
+        for i in range(0,all_means_wo_na.shape[0]):
+            for j in range(0,all_means_wo_na.shape[0]):
+                print("{0},{1} {2}".format(i,j,euclidean(all_means_wo_na.values[i], all_means_wo_na.values[j])))
+
+        # print(all_means.dropna())
+        # print(all_means)
+
+    # print(euclidean(frames[0][1][0:200], frames[1][1][0:200]))
 
