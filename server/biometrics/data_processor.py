@@ -1,6 +1,8 @@
 from collections import defaultdict
 import pandas as pd
 import numpy as np
+import operator
+import json
 
 from digraph import Digraph
 
@@ -33,17 +35,19 @@ class DataProcessor:
             delta = bigram[1][2] - bigram[0][2] # time difference
             digraphs[name].append(delta)
 
-        # Create panda frame
-        df = pd.DataFrame(digraphs)
+        self.digraphs = digraphs
 
-        self.df = df
+        # Create panda frame
+        df = pd.DataFrame({k: pd.Series(v) for k,v in digraphs.iteritems()})
+
+        self.all_data = df
 
     def process(self):
-        count = self.df.count()
-        means = self.df.mean()
-        var   = self.df.var()
+        count = self.all_data.count()
+        means = self.all_data.mean()
+        var   = self.all_data.var()
 
-        pd.concat([count, means, var], axis=1)
+        self.df = pd.concat([count, means, var], axis=1)
 
     def filter(self, data, action):
         return [x for x in data if x[1] == action]
@@ -51,3 +55,18 @@ class DataProcessor:
     def ngrams(self, lst, n=2):
         return zip(*[lst[i:] for i in range(n)])
 
+
+if __name__ == "__main__":
+    with open('data/data.json','r') as f:
+        data = json.load(f)
+
+        for k,v in data.iteritems():
+            print "======="
+            print k
+            print "======="
+            dp = DataProcessor(v)
+            dp.preprocess()
+            dp.process()
+
+            print dp.digraphs
+            print dp.df
