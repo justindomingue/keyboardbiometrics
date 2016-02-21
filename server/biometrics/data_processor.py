@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 import operator
 import json
-from digraph import Digraph
+from scipy.spatial.distance import euclidean
 
 class DataProcessor:
     def __init__(self, raw):
@@ -39,7 +39,7 @@ class DataProcessor:
         # Create panda frame
         df = pd.DataFrame({k: pd.Series(v) for k,v in digraphs.items()})
 
-        self.all_data = df
+        self.all_data = df.sort_index()
 
     def process(self):
         count = self.all_data.count()
@@ -61,15 +61,13 @@ if __name__ == "__main__":
 
         frames = []
         for k,v in data.items():
-            print ("=======")
-            print (k)
-            print ("=======")
             dp = DataProcessor(v)
             dp.preprocess()
             dp.process()
 
-           # print (dp.digraphs)
-           # print (dp.df)
-            print(dp.df.index)
+            print(dp.df)
 
             frames.append(dp.df)
+
+    print(euclidean(frames[0][1][0:200], frames[1][1][0:200]))
+
