@@ -3,7 +3,6 @@ import pandas as pd
 import numpy as np
 import operator
 import json
-
 from digraph import Digraph
 
 class DataProcessor:
@@ -38,7 +37,7 @@ class DataProcessor:
         self.digraphs = digraphs
 
         # Create panda frame
-        df = pd.DataFrame({k: pd.Series(v) for k,v in digraphs.iteritems()})
+        df = pd.DataFrame({k: pd.Series(v) for k,v in digraphs.items()})
 
         self.all_data = df
 
@@ -60,13 +59,14 @@ if __name__ == "__main__":
     with open('data/data.json','r') as f:
         data = json.load(f)
 
-        for k,v in data.iteritems():
-            print "======="
-            print k
-            print "======="
+        for k,v in data.items():
+            print ("=======")
+            print (k)
+            print ("=======")
             dp = DataProcessor(v)
             dp.preprocess()
             dp.process()
 
-            print dp.digraphs
-            print dp.df
+           # print (dp.digraphs)
+           # print (dp.df)
+            print(dp.df.index)
