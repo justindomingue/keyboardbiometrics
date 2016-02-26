@@ -3,7 +3,9 @@ import pandas as pd
 import numpy as np
 import operator
 import json
-from scipy.spatial.distance import euclidean
+from scipy.spatial.distance import euclidean,pdist,seuclidean
+
+THRESHOLD = 5
 
 class DataProcessor:
     def __init__(self, raw):
@@ -32,13 +34,15 @@ class DataProcessor:
         for bigram in bigrams:
             name = chr(bigram[0][0]) + chr(bigram[1][0])
             delta = bigram[1][2] - bigram[0][2] # time difference
-            digraphs[name].append(delta)
+            if delta < 500:
+                digraphs[name].append(delta)
 
         self.digraphs = digraphs
 
         # Create panda frame
         df = pd.DataFrame({k: pd.Series(v) for k,v in digraphs.items()})
 
+        print(df)
         self.all_data = df.sort_index()
 
     def process(self):
@@ -46,10 +50,14 @@ class DataProcessor:
         means = self.all_data.mean()
         var   = self.all_data.var()
 
+        count.name = "count"
+        means.name = "means"
+        var.name = "variance"
+
         self.df = pd.concat([count, means, var], axis=1)
 
         # Filter
-        self.df = self.df[self.df[0] >= 4]
+        self.df = self.df[self.df[0] >= THRESHOLD]
 
     def filter(self, data, action):
         return [x for x in data if x[1] == action]
@@ -59,22 +67,30 @@ class DataProcessor:
 
 
 if __name__ == "__main__":
-    with open('data/data2.json','r') as f:
+    with open('data/s.txt','r') as f:
         data = json.load(f)
 
         all_means = pd.DataFrame()
         for k,v in data.items():
+            print(k)
+
             dp = DataProcessor(v)
             dp.preprocess()
             dp.process()
 
-            all_means = pd.concat([all_means, dp.df[1]], axis=1)
+            # print(dp.df)
+            all_means = pd.concat([all_means, dp.df.loc[:,1:2]], axis=1, join='inner')
 
-        all_means_wo_na = all_means.dropna()
+        print(all_means)
+        # all_means_wo_na = all_means.dropna()
 
-        for i in range(0,all_means_wo_na.shape[0]):
-            for j in range(0,all_means_wo_na.shape[0]):
-                print("{0},{1} {2}".format(i,j,euclidean(all_means_wo_na.values[i], all_means_wo_na.values[j])))
+        # print(all_means_wo_na)
+        #
+        # for i in range(0,all_means_wo_na.shape[1],2):
+        #     for j in range(0,all_means_wo_na.shape[1],2):
+        #         print("{0} {1}".format(all_means_wo_na.loc[i], all_means_wo_na.loc[j]))
+                # dist = seuclidean(all_means_wo_na.values[i], all_means_wo_na.values[j], all_means_wo_na.values[i+1])
+                # print("{0},{1} {2}".format(i,j,dist))
 
         # print(all_means.dropna())
         # print(all_means)

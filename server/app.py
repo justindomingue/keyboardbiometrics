@@ -1,3 +1,4 @@
+import datetime
 from flask import Flask, request
 import json
 
@@ -9,7 +10,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    print 'It\'s Alive!'
+    print('It\'s Alive!')
 
 @app.route('/identify', methods=['POST'])
 def identify():
@@ -18,7 +19,11 @@ def identify():
     user = json.user
     data = json.data
 
-    print 'Authenticating {0}'.format(user)
+
+    with open('data/' + datetime.data.today(), 'a') as f:
+        print>>f, json
+
+    print('Authenticating {0}'.format(user))
 
 
 if __name__ == "__main__":
